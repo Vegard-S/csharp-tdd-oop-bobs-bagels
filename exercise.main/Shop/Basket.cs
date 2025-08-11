@@ -9,65 +9,93 @@ namespace exercise.main.Shop
 {
     public class Basket
     {
-        private int _capacity;
-        private double _basketTotal;
-        public List<IProduct> _products;
-        Dictionary<int, IProduct> _inventory = new Dictionary<int, IProduct>()
-{
-    { 1, new Bagel ( 1, "BGLO", 0.49, "Bagel", "Onion" ) },
-    { 2, new Bagel(2, "BGLP", 0.39, "Bagel", "Plain") },
-    { 3, new Bagel(3, "BGLE", 0.49, "Bagel", "Everything") },
-    { 4, new Bagel(4, "BGLS", 0.49, "Bagel", "Sesame") },
-    { 5, new Coffee(5, "COFB", 0.99, "Coffee", "Black") },
-    { 6, new Coffee(6, "COFW", 1.19, "Coffee", "White") },
-    { 7, new Coffee(7, "COFC", 1.29, "Coffee", "Capuccino") },
-    { 8, new Coffee(8, "COFL", 1.29, "Coffee", "Latte") },
-    { 9, new Filling(9, "FILB", 0.12, "Filling", "Bacon") },
-    { 10, new Filling(10, "FILE", 0.12, "Filling", "Egg") },
-    { 11, new Filling(11, "FILC", 0.12, "Filling", "Cheese") },
-    { 12, new Filling(12, "FILX", 0.12, "Filling", "Cream Cheese") },
-    { 13, new Filling(13, "FILS", 0.12, "Filling", "Smoked Salmon") },
-    { 14, new Filling(14, "FILH", 0.12, "Filling", "Ham") }
-
-};
+        private int _capacity = 2;
+        public List<IProduct> _products = new List<IProduct>();
+        private Inventory _inventory = new Inventory();
 
 
-        public bool Add(int id)
+
+
+        public bool Add(IProduct product)
         {
-            throw new NotImplementedException();
+            if (!CheckFull())
+            {
+                _products.Add(product);
+                return true;
+            }
+            else 
+            {
+                Console.WriteLine("basket is full!");
+                return false; 
+            }
+            
         }
 
-        public bool Remove(int id)
+        public bool Remove(IProduct product)
         {
-            throw new NotImplementedException();
+            foreach (var item in _products)
+            {
+                if (item.Id == product.Id)
+                {
+                    _products.Remove(item);
+                    return true;
+                }
+            }
+            Console.WriteLine("Product is now in basket, not removed");
+            return false;
         }
         public bool CheckFull()
         {
-            throw new NotImplementedException();
+            if (_products.Count >= _capacity)
+            {
+                //true means full
+                return true;
+            }
+            else 
+            { 
+                return false; 
+            }
         }
         public bool ChangeCapacity(int capacity)
         {
-            throw new NotImplementedException();
+            //possible add manager check as if statement and return false if not manager
+            _capacity = capacity;
+            return true;
         }
-        public bool CheckIfExists(int id)
+
+
+        public double BasketTotal { get { return _products.Sum(x => x.Price); } }
+        public double ShowBagelPrice(string SKU)
         {
-            throw new NotImplementedException();
+            if (SKU == "BGLO" || SKU == "BGLP" || SKU == "BGLE" || SKU == "BGLS")
+            {
+                return _inventory._inventory[SKU];
+            }
+            else
+            {
+                Console.WriteLine("product is not bagel");
+                return 0;
+            }
         }
-        public double BasketTotal()
+        public double ShowFillingPrice(string SKU)
         {
-            throw new NotImplementedException();
+            if (SKU == "FILB" || SKU == "FILE" || SKU == "FILC" || SKU == "FILX" || SKU == "FILS" || SKU == "FILH")
+            {
+                return _inventory._inventory[SKU];
+            }
+            else
+            {
+                Console.WriteLine("product is not filling");
+                return 0;
+            }
         }
-        public double ShowBagelPrice(int id)
+        public bool CheckInventory(string SKU)
         {
-            throw new NotImplementedException();
-        }
-        public double ShowFillingPrice(int id)
-        {
-            throw new NotImplementedException();
-        }
-        public bool CheckInventory(int id)
-        {
-            throw new NotImplementedException();
+            if (_inventory._inventory.ContainsKey(SKU))
+            {
+                return true;
+            }
+            return false;
         }
     }
 }

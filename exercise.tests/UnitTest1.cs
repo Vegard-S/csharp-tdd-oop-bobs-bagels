@@ -17,99 +17,123 @@ public class Tests
     {
         //arrange
         Basket basket = new Basket();
+        Bagel bagel = new Bagel(1, "BGLO", 0.49, "Bagel", "Onion");
 
         //act
-        basket.Add(2);
+        basket.Add(bagel);
+        
 
         //assert
-        Assert.That(basket._products[0].SKU, Is.EqualTo("BGLP"));
+        Assert.That(basket._products[0].SKU, Is.EqualTo("BGLO"));
     }
-
+    
     [Test]
     public void RemoveBagel()
     {
         //arrange
         Basket basket = new Basket();
-        basket.Add(2);
-        basket.Add(4);
+        Bagel bagel = new Bagel(1, "BGLO", 0.49, "Bagel", "Onion");
+        Bagel bagel2 = new Bagel(2, "BGLS", 0.39, "Bagel", "Plain");
+        basket.Add(bagel);
+        basket.Add(bagel2);
 
         //act
-        basket.Remove(2);
+        basket.Remove(bagel);
 
         //assert
         Assert.That(basket._products[0].SKU, Is.EqualTo("BGLS"));
+        Assert.That(basket._products[0].Variant, Is.EqualTo("Plain"));
     }
-
+    
     [Test]
     public void CheckFull()
     {
         //arrange
         Basket basket = new Basket();
-        basket.Add(2);
-        basket.Add(4);
-        basket.Add(1);
+        Bagel bagel = new Bagel(1, "BGLO", 0.49, "Bagel", "Onion");
+        Bagel bagel2 = new Bagel(2, "BGLS", 0.39, "Bagel", "Plain");
+        Bagel bagel3 = new Bagel(3, "BGLS", 0.39, "Bagel", "Plain");
+        basket.Add(bagel);
+        basket.Add(bagel2);
+        basket.Add(bagel3);
+
 
         //act
         bool checkFull = basket.CheckFull();
 
         //assert
         Assert.IsTrue(checkFull);
+        Assert.That(basket._products.Count(), Is.EqualTo(2));
     }
 
-
+    
     [Test]
     public void ChangeCapacity()
     {
         //arrange
         Basket basket = new Basket();
-        basket.Add(2);
-        basket.Add(4);
-        basket.Add(1);
+        Bagel bagel = new Bagel(1, "BGLO", 0.49, "Bagel", "Onion");
+        Bagel bagel2 = new Bagel(2, "BGLS", 0.39, "Bagel", "Plain");
+        Bagel bagel3 = new Bagel(3, "BGLS", 0.39, "Bagel", "Plain");
+        basket.Add(bagel);
+        basket.Add(bagel2);
+        basket.Add(bagel3);
 
         //act
         bool checkFull = basket.CheckFull();
-        basket.ChangeCapacity(3);
+        basket.ChangeCapacity(4);
         bool checkFull2 = basket.CheckFull();
+
 
         //assert
         Assert.IsTrue(checkFull);
         Assert.IsFalse(checkFull2);
     }
-
+    
     [Test]
     public void CheckIfExists()
     {
         //arrange
         Basket basket = new Basket();
-        basket.Add(2);
-        basket.Add(4);
-        basket.Add(1);
+        Bagel bagel = new Bagel(1, "BGLO", 0.49, "Bagel", "Onion");
+        Bagel bagel2 = new Bagel(2, "BGLS", 0.39, "Bagel", "Plain");
+        basket.Add(bagel);
+        basket.Add(bagel2);
+
+
+        Bagel bagel3 = new Bagel(3, "BGLE", 0.49, "Bagel", "Everything");
 
         //act
-        bool result = basket.CheckIfExists(2);
-        bool result2 = basket.CheckIfExists(3);
+        bool result = basket.Remove(bagel);
+        bool result2 = basket.Remove(bagel3);
 
         //assert
         Assert.IsTrue(result);
         Assert.IsFalse(result2);
     }
 
+    
 
     [Test]
     public void BasketTotal()
     {
         //arrange
         Basket basket = new Basket();
-        basket.Add(2);
-        basket.Add(4);
-        basket.Add(1);
+        Bagel bagel = new Bagel(1, "BGLO", 0.49, "Bagel", "Onion");
+        Bagel bagel2 = new Bagel(2, "BGLS", 0.39, "Bagel", "Plain");
+
+        basket.Add(bagel);
+        basket.Add(bagel2);
+
 
         //act
-        double result = basket.BasketTotal();
+        double result = basket.BasketTotal;
 
         //assert
-        Assert.That(result, Is.EqualTo(1.37));
+        Assert.That(result, Is.EqualTo(0.88));
     }
+
+    
     
     [Test]
     public void ShowBagelPrice()
@@ -119,19 +143,24 @@ public class Tests
 
 
         //act
-        double result = basket.ShowBagelPrice(1);
+        double result = basket.ShowBagelPrice("BGLO");
+        double result2 = basket.ShowBagelPrice("COFB");
+        double result3 = basket.ShowBagelPrice("FILB");
 
         //assert
         Assert.That(result, Is.EqualTo(0.49));
+        Assert.That(result2, Is.EqualTo(0));
+        Assert.That(result3, Is.EqualTo(0));
     }
 
+    
    
     [Test]
     public void AddFilling() 
     {
         //arrange
         Bagel bagel = new Bagel(1, "BGLO", 0.49, "Bagel", "Onion");
-        Filling filling = new Filling(9, "FILB", 0.12, "Filling", "Bacon");
+        Filling filling = new Filling(1, "FILB", 0.12, "Filling", "Bacon");
 
         //act
         bagel.AddFilling(filling);
@@ -149,12 +178,16 @@ public class Tests
 
 
         //act
-        double result = basket.ShowFillingPrice(9);
+        double result = basket.ShowFillingPrice("BGLO");
+        double result2 = basket.ShowFillingPrice("COFB");
+        double result3 = basket.ShowFillingPrice("FILB");
 
         //assert
-        Assert.That(result, Is.EqualTo(0.12));
+        Assert.That(result, Is.EqualTo(0));
+        Assert.That(result2, Is.EqualTo(0));
+        Assert.That(result3, Is.EqualTo(0.12));
     }
-
+    
     [Test]
     public void CheckInventory()
     {
@@ -163,8 +196,8 @@ public class Tests
 
 
         //act
-        bool result = basket.CheckInventory(1);
-        bool result2 = basket.CheckInventory(15);
+        bool result = basket.CheckInventory("BGLO");
+        bool result2 = basket.CheckInventory("BGLA");
 
         //assert
         Assert.IsTrue(result);

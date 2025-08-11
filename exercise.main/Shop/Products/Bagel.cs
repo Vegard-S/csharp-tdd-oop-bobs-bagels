@@ -17,17 +17,19 @@ namespace exercise.main.Shop.Products
             Variant = variant;
         }
 
+
         public int Id { get; set; }
         public string SKU { get; set; }
         public double Price { get; set; }
         public string Name { get; set; }
         public string Variant { get; set; }
 
-        public List<IProduct> Fillings { get; set; }
+        public List<IProduct> Fillings = new List<IProduct>();
 
         public bool AddFilling(IProduct filling)
         {
-            throw new NotImplementedException();
+            Fillings.Add(filling);
+            return true;
         }
     }
 }
