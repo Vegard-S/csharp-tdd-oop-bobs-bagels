@@ -26,6 +26,7 @@ namespace exercise.main.Shop.Products
 
         public List<IProduct> Fillings = new List<IProduct>();
 
+        public double FillingPrice { get { return Fillings.Sum(x => x.Price); } }
         public bool AddFilling(IProduct filling)
         {
             Fillings.Add(filling);

@@ -1,4 +1,4 @@
-using exercise.main.Shop;
+﻿using exercise.main.Shop;
 using exercise.main.Shop.Products;
 using System.Xml.Linq;
 using System.Xml.Serialization;
@@ -204,5 +204,42 @@ public class Tests
         Assert.IsFalse(result2);
     }
     
+    [Test]
+    public void CheckDiscountTotal()
+    {
 
+        // Arrange
+        Basket basket = new Basket();
+
+        basket.ChangeCapacity(100);
+
+        // Add 7 onion bagels
+        for (int i = 0; i < 7; i++)
+        {
+            basket.Add(new Bagel(i, "BGLO", 0.49, "Bagel", "Onion"));
+        }
+
+        // Add 13 plain bagels
+        for (int i = 0; i < 13; i++)
+        {
+            basket.Add(new Bagel(i + 7, "BGLP", 0.39, "Bagel", "Plain"));
+        }
+
+        // Add 2 coffees
+        basket.Add(new Coffee(0, "COFB", 0.99, "Coffee", "Black"));
+        basket.Add(new Coffee(1, "COFB", 0.99, "Coffee", "Black"));
+
+        // Act
+        double total = basket.NewBasketTotal();
+
+        // Assert
+        // Discounts
+        // - 6 onion = 2.49
+        // - 12 plain = 3.99
+        // - 2 coffee combos  2 * 1.25 = 2.50
+        // Total = 2.49 + 3.99 + 2.50 = 8.98
+        Assert.That(total, Is.EqualTo(8.98));
+
+
+    }
 }
